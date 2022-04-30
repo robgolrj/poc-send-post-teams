@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %p [%c] - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.odftoolkit.odfdom.pkg.OdfXMLFactory" level="ERROR"/>
+    <logger name="org.springframework" level="INFO"/>
+
+    <!-- Configurando envio de log via ms teams -->
+    <appender name="MSTEAMS" class="com.example.pocsendpostteams.MsTeamsAppender">
+        <!-- Webhook URI, required -->
+        <webHookUri>${Your Webhook URI}</webHookUri>
+        <!-- Custom connection timeout, default 5 seconds, TimeUint: millisecond -->
+        <connectTimeout>1000</connectTimeout>
+        <!-- Custom read timeout, default 10 seconds, TimeUint: millisecond -->
+        <readTimeout>3000</readTimeout>
+        <!-- Custom write timeout, default 10 seconds, TimeUint: millisecond -->
+        <writeTimeout>3000</writeTimeout>
+        <!-- a prefix will be ahead of entire title, which can identify the app or env information -->
+        <titlePrefix>Staging</titlePrefix>
+
+        <!-- Proxy Configuration -->
+<!--        <proxyHost>${Your Proxy Host}</proxyHost>-->
+<!--        <proxyPort>${Your Proxy Port}</proxyPort>-->
+<!--        <proxyUsername>${Your Proxy Username}</proxyUsername>-->
+<!--        <proxyPassword>${Your Proxy Password}</proxyPassword>-->
+
+        <!-- how many lines will be displayed in the message body, default is 5 -->
+        <stackTraceLines>5</stackTraceLines>
+    </appender>
+    <!-- Currently recommended way of using MS Teams appender -->
+    <appender name="ASYNC_MSTEAMS" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="MSTEAMS"/>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+
+
+
+    <!-- SEGUNDA OPCAO DE ENVIO
+    <appender name="MSTEAMS" class="com.example.pocsendpostteams.MsTeamsAppender2">
+        <appName>AppName</appName>
+        <webhookUri>your web hook from ms teams</webhookUri>
+    </appender>
+
+    <appender name="ASYNC_MSTEAMS" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="MSTEAMS" />
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="ASYNC_MSTEAMS" />
+    </root>
+
+    -->
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="ASYNC_MSTEAMS" />
+    </root>
+
+
+</configuration>
